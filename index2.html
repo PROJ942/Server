@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>PROJ942</title>
+	</head>
+
+	<body>
+		
+		<h1>Formulaire pour la reconnaissance et l'ajout de visages.</h1>
+		<label for="file">Fichier : </label>
+		<input type="file" name="file" id="file" /><div id="base64_div" style="display: inline-block;"></div><br />
+		<form method="post" action="server2.php" enctype="multipart/form-data">
+			<label for="ImageName">Commande : </label>
+			<input type="text" name="ImageName" /><br />
+			<input type="hidden" name="base64" id="base64" value="" />
+			<input type="submit" name="submit" value="Executer" />
+		</form>
+		
+
+		<script type="text/javascript">
+			var file = document.getElementById("file");
+			var base64 = document.getElementById("base64");
+			var base64_div = document.getElementById("base64_div");
+			
+			function readImage() {
+				if ( this.files && this.files[0] ) {
+					var FR= new FileReader();
+					FR.onload = function(e) {
+						var result = e.target.result;
+						base64.value = result.split(",")[1];
+						base64_div.innerHTML = result.split(",")[0];
+					};       
+					FR.readAsDataURL( this.files[0] );
+				}
+			}
+
+			file.addEventListener("change", readImage, false);
+		</script>
+		
+    </body>
+</html>
