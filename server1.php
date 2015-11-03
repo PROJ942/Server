@@ -8,15 +8,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		
 		// Récupération de la commande
 		$command = $_POST['ImageName'];
-		//echo "Commande : ".$command."\n";
+		echo "Commande : ".$command."\n";
 		
 		// Prétratement de la commande on enleve l'eventuel ".JPG" ou ".jpg" à la fin de la commande
 		if (strstr($command, ".jpg") != FALSE) {
 			$command = explode(".jpg",$command)[0];
-			//echo "Commande prétraitée : ".$command."\n";
+			echo "Commande prétraitée : ".$command."\n";
 		} else if (strstr($command, ".JPG") != FALSE) {
 			$command = explode(".JPG",$command)[0];
-			//echo "Commande prétraitée : ".$command."\n";
+			echo "Commande prétraitée : ".$command."\n";
 		}
 		
 		// Traitement de la commande dans la cas d'un ajout
@@ -26,13 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			$command_add_prenom = $command_split[1];
 			$command_add_nom = $command_split[2];
 			
-			//echo "Commande choix : ".$command_choice."\n";
-			//echo "Commande ajout prenom : ".$command_add_prenom."\n";
-			//echo "Commande ajout nom : ".$command_add_nom."\n";
+			echo "Commande choix : ".$command_choice."\n";
+			echo "Commande ajout prenom : ".$command_add_prenom."\n";
+			echo "Commande ajout nom : ".$command_add_nom."\n";
 		} // Traitement de la commande dans la cas d'une reconnaissance
 		else {
 			$command_choice = "reco";
-			//echo "Commande choix : ".$command_choice."\n";
+			echo "Commande choix : ".$command_choice."\n";
 		}
 		
 		// Traitement du fichier envoyer en base64
@@ -52,31 +52,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$image_data = base64_decode($_POST['base64']);
 		$fp = fopen($image_save_path, 'w');
 		if(fwrite($fp, $image_data) != false){
-			//echo "Image uploaded : ".$image_save_path."\n";
+			echo "Image uploaded : ".$image_save_path."\n";
 			$image_successfully_updated = true;
 		}
 		else{
-			//echo "Error uploading image";
+			echo "Error uploading image";
 			$image_successfully_updated = false;
 		}
 		fclose($fp);
 		
-		$prog_name = "recovisage2";
-		$base_used = "BaseImages";
+		$prog_name = "recovisage1";
+		$base_used = "csv.ext";
 		if ($image_successfully_updated == true) {
 			if (stristr($command_choice, "add") == true) {
-				$exec_command = "$html_dir$prog_name $html_dir$database_dir$base_used $image_save_path add $command_add_prenom'_'$command_add_nom";
+				$exec_command = "$html_dir$prog_name $html_dir$base_used $image_save_path add $command_add_prenom'_'$command_add_nom";
 			} else if (stristr($command_choice, "reco") == true){
-				$exec_command = "$html_dir$prog_name $html_dir$database_dir$base_used $image_save_path reco";
+				$exec_command = "$html_dir$prog_name $html_dir$base_used $image_save_path reco";
 			}
-			//echo "exec_command ".$command_choice." : ".$exec_command."\n";
+			echo "exec_command ".$command_choice." : ".$exec_command."\n";
 			$return = exec($exec_command, $output, $return_var);
-			//echo "return : ".$return."\n";
-			//echo "output : ";
-			//print_r($output[4]);
-			//echo "\n";
-			
-			echo "$output[4] \n";
+			echo "return : ".$return."\n";
+			echo "output : ";
+			print_r($output);
+			echo "\n";
 		}
 		
 	}
